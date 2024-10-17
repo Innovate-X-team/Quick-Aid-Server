@@ -7,6 +7,7 @@ from api.models import ConsumerUser, ProviderUser, Otp
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
+from django.conf import settings
 
 
 # Create your views here.
@@ -40,8 +41,9 @@ def create_user(request):
 def verify_email(request):
     s = smtplib.SMTP('smtp.gmail.com', 587)
     s.starttls()
-    s.login("sayanbiswas6073@gmail.com", "yqne sasy szuq pdtu")
+    s.login("sayanbiswas6073@gmail.com", settings.EMAIL_PASSWORD)
     code = int(''.join(str(random.randint(0, 9)) for _ in range(6)))
+    Otp.objects.filter(email=request.data.get('email')).delete()  # Deleting previous OTP if exists
     Otp.objects.create(email=request.data.get('email'), otp=code)
     msg = MIMEMultipart("alternative")
     msg["subject"] = "Verify Email"
