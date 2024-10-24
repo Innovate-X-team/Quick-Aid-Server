@@ -68,7 +68,7 @@ python manage.py runserver
 ```
 
 ## Running the App
-See Quick Aid's user app repository for seting up the mobile application. https://github.com/Innovate-X-team/quick-aid-user-app.git
+See Quick Aid's user app repository for seting up the mobile application. https://github.com/Innovate-X-team/quick-aid-user-app
 
 ## API Endpoints
 The backend exposes a set of REST APIs for the Quick Aid app:
