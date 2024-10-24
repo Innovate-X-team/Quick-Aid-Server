@@ -43,16 +43,26 @@ pip install -r requirements.txt
 SECRET_KEY=your-secret-key
 EMAIL_PASSWORD=your-email's-app-password
 ```
-**5. Set up the database:**
+
+**5. Add service account key:**
+Add service account key to connect firebase.
+
+1. Go to firebase and create a new project.
+2. Go to project's settings page
+3. Go to service account tab
+4. Now click on Generate new private key to download `serviceAccountKey.json` file
+5. Put the json file on the root directory of your project.
+
+**6. Set up the database:**
 ```
 python manage.py migrate
 ```
-**6. Create a superuser:** To access the Django admin panel, create a superuser:
+**7. Create a superuser:** To access the Django admin panel, create a superuser:
 
 ```
 python manage.py createsuperuser
 ```
-**7. Run the development server:**
+**8. Run the development server:**
 ```
 python manage.py runserver
 ```
