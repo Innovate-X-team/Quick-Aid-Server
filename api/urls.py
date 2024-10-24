@@ -17,5 +17,4 @@ urlpatterns = [
     path('get_assigned_task/', views.get_assigned_task),
     path('accept_task/', views.accept_task),
     path('complete_task/', views.complete_task),
-    path('test_notification/', views.test_notification),
 ]

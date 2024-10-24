@@ -48,7 +48,6 @@ def login(request):
 def create_user(request):
     if request.data.get('type') == 'consumer':
         serializer = ConsumerUserSerializer(data=request.data)
-        print(serializer)
     else:
         serializer = ProviderUserSerializer(data=request.data)
     if serializer.is_valid():
@@ -162,7 +161,6 @@ def call_service(request):
     geolocator = Nominatim(user_agent="quickaid")
     location = geolocator.reverse((request.data.get('latitude'), request.data.get('longitude')), 
     exactly_one=True)
-    print(str(location))
     
     if "city" in location.raw["address"]:
         ambulance_provider = ProviderUser.objects.filter(on_duty=True, on_work=False, city=location.raw['address']["city"], service_type=request.data.get('type')).all()
@@ -235,12 +233,10 @@ def call_service(request):
 
 @api_view(['POST'])
 def get_assigned_task(request):
-    print(request.data)
     user = ProviderUser.objects.filter(username=request.data.get('username')).first()
     if user:
         task = user.task_assigned
         if task:
-            print(user.task_assigned.consumer)
             return Response({"message": "Task found", "data": {
                 'consumer': {
                     'username': user.task_assigned.consumer.username,
@@ -258,7 +254,6 @@ def get_assigned_task(request):
 @api_view(['POST'])
 def accept_task(request):
     task = Task.objects.filter(id=request.data.get('task_id')).first()
-    print(task.provider)
     if task.provider:
         return Response({"message": "Task already accepted"}, status=status.HTTP_400_BAD_REQUEST)
     provider = ProviderUser.objects.filter(username=request.data.get('username')).first()
@@ -276,23 +271,3 @@ def complete_task(request):
     provider.save()
     task.delete()
     return Response({"message": "Task completed"}, status=status.HTTP_200_OK)
-
-@api_view(['POST'])
-def test_notification(request):
-    token = 'fdxGFiUWSsGucVcJbDpmyl:APA91bH0I35fIVnxUknqmBF9kux86t1MqNvruZdpJw6KGUw44gXFY4dvXKOojBaLn6faztnhgmzmKpD0hJBOfZ7Gk91f9ij5ju9qd_wsCdLi4ze2dLCF2q3ItrVjV5tt7ZbsbkndTvCY'
-    notification_message = messaging.Message(
-        token=token,
-        notification=messaging.Notification(
-            title = 'New task available',
-            body = json.dumps({
-                'body': 'New task available at location 123',
-                'icon': 'ic_launcher',
-                'latitude': 22,
-                'longitude': 88,
-                'username': 'sayancode',
-                'task_id': 1
-            }),
-        ),
-    )
-    response = messaging.send(notification_message)
-    return Response({"message": "Notification sent successfully"}, status=status.HTTP_200_OK)
